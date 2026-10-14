@@ -19,7 +19,7 @@ export const AI = {
       icon: 'tools',
       title: 'Dev tools',
       text: 'In the editor for boilerplate, tests, refactors and docs: React components, Spring controllers, SQL and regular expressions. Everything is read, run and tested before it stays.',
-      tools: ['GitHub Copilot', 'Cursor', 'VS Code', 'IntelliJ IDEA'],
+      tools: ['GitHub Copilot', 'Cursor', 'VS Code'],
     },
     {
       icon: 'learn',
@@ -51,7 +51,6 @@ export const AI = {
       group: 'Everyday dev tools',
       items: [
         { name: 'VS Code', logo: 'vscode' },
-        { name: 'IntelliJ IDEA', logo: 'intellijidea' },
         { name: 'Postman', logo: 'postman' },
         { name: 'Git', logo: 'git' },
         { name: 'GitHub', logo: 'github' },
