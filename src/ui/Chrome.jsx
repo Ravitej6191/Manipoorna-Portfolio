@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { PROFILE } from '../data/profile.js'
+import { NOTES } from '../data/notes.js'
 
+// The order of the page. Numbers come from the position, and the Notes section only exists once there are notes.
 export const SHEETS = [
-  { id: 'cover', n: '01', label: 'Home' },
-  { id: 'about', n: '02', label: 'About' },
-  { id: 'work', n: '03', label: 'Projects' },
-  { id: 'code', n: '04', label: 'Code' },
-  { id: 'experience', n: '05', label: 'Experience' },
-  { id: 'skills', n: '06', label: 'Skills' },
-  { id: 'testimonials', n: '07', label: 'Kind words' },
-  { id: 'contact', n: '08', label: 'Contact' },
-]
+  { id: 'cover', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Projects' },
+  { id: 'code', label: 'Code' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'skills', label: 'Skills' },
+  ...(NOTES.length ? [{ id: 'notes', label: 'Notes' }] : []),
+  { id: 'testimonials', label: 'Kind words' },
+  { id: 'contact', label: 'Contact' },
+].map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0') }))
 
 export const goTo = (id) => {
   const el = document.getElementById(id)
@@ -18,7 +21,8 @@ export const goTo = (id) => {
 }
 
 // Heading strip at the top of every section: "03 / 07 — PROJECTS", with a dimension line.
-export function SheetHead({ n, title, note }) {
+export function SheetHead({ id, title, note }) {
+  const n = SHEETS.find((s) => s.id === id)?.n
   return (
     <header className="sheethead reveal">
       <h2 className="sheethead__tag">
@@ -30,7 +34,9 @@ export function SheetHead({ n, title, note }) {
   )
 }
 
-export function Header({ theme, onTheme }) {
+const MAC = typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent)
+
+export function Header({ theme, onTheme, onPalette }) {
   const [active, setActive] = useState('cover')
   const [open, setOpen] = useState(false)
   const bar = useRef()
@@ -92,7 +98,14 @@ export function Header({ theme, onTheme }) {
             <span>{s.label}</span>
           </a>
         ))}
+        <button className="hdr__navpal" onClick={() => (setOpen(false), onPalette())}>
+          Search and commands <kbd>{MAC ? '⌘' : 'Ctrl'} K</kbd>
+        </button>
       </nav>
+      <button className="hdr__pal" onClick={onPalette} aria-label="Open the command palette" title="Command palette">
+        <kbd>{MAC ? '⌘' : 'Ctrl'}</kbd>
+        <kbd>K</kbd>
+      </button>
       <button className="hdr__theme" onClick={onTheme} aria-label={theme === 'paper' ? 'Switch to the blueprint look' : 'Switch to the paper look'} title={theme === 'paper' ? 'Blueprint' : 'Paper'}>
         <i aria-hidden="true" />
         <span>{theme === 'paper' ? 'Blueprint' : 'Paper'}</span>

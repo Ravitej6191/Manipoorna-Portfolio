@@ -37,6 +37,12 @@ export default function Cover() {
           <p className="cover__lede">
             I build scalable web applications, with React up front and Spring Boot behind it. I care about secure, fast interfaces: Spring Security on the backend, and React apps that score 95+ on Lighthouse.
           </p>
+          {PROFILE.availability && (
+            <p className="avail">
+              <i aria-hidden="true" />
+              {PROFILE.availability}
+            </p>
+          )}
           <div className="cover__cta">
             <a className="btn btn--solid" href="#work" onClick={(e) => (e.preventDefault(), goTo('work'))}>
               View projects <span aria-hidden="true">↓</span>

@@ -1,0 +1,22 @@
+name: CI
+
+# On every push and pull request: build the site, run the smoke test, and check accessibility, SEO and speed.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - name: Lighthouse
+        run: npx --yes @lhci/cli@0.14.x autorun

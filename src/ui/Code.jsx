@@ -213,7 +213,7 @@ export default function Code() {
 
   return (
     <section id="code" className="sheet code" aria-label="Code and GitHub" ref={root}>
-      <SheetHead n="04" title="Code" note="Small, reviewed changes that reach main through CI." />
+      <SheetHead id="code" title="Code" note="Small, reviewed changes that reach main through CI." />
       <div className="code__grid">
         <div className="code__left">
           <GitGraph />

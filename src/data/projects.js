@@ -1,7 +1,11 @@
 // The three projects. Schneider Electric and B2B Talent Hub are written from the descriptions supplied for them;
 // Talus Pay is written in the same voice, from its name and the style of the other two.
 // `layers` entries are [name, one-line summary, tags]. Add `links: { live, repo }` and `shots: [{ src, alt, caption }]`
-// to a project and the buttons and a Screens section appear. The earlier POS / Audit / Insight entries are in git history.
+// to a project and the buttons and a Screens section appear. More optional fields, each shown only when present:
+//   figma: 'https://www.figma.com/proto/…'                      an embedded prototype
+//   compare: { before, after, beforeLabel, afterLabel, caption } a before / after slider (two image paths)
+//   reflection: 'What I would do differently.' (or an array)     a "Looking back" section
+//   quote: { text, name, role }                                  a quote about this project The earlier POS / Audit / Insight entries are in git history.
 export const PROJECTS = [
   {
     id: 'talus-pay',

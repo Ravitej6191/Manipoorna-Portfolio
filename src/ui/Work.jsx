@@ -69,7 +69,7 @@ function Drawing({ p, flip }) {
 export default function Work() {
   return (
     <section id="work" className="sheet work" aria-label="Projects">
-      <SheetHead n="03" title="Projects" note="Selected projects. Hover a layer, or its entry in the list, to match them up." />
+      <SheetHead id="work" title="Projects" note="Selected projects. Hover a layer, or its entry in the list, to match them up." />
       {PROJECTS.map((p, i) => (
         <Drawing key={p.id} p={p} flip={i % 2 === 1} />
       ))}

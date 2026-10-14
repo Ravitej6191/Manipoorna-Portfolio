@@ -7,6 +7,24 @@ import ProjectArt from './Art.jsx'
 import Flow from './Flow.jsx'
 import useReveal from './useReveal.js'
 
+// A before / after slider: two images, with a handle that reveals the second over the first.
+function Compare({ before, after, beforeLabel = 'Before', afterLabel = 'After', caption }) {
+  const [pos, setPos] = useState(50)
+  return (
+    <figure className="cmp">
+      <div className="cmp__stage" style={{ '--pos': pos + '%' }}>
+        <img src={before} alt={beforeLabel} draggable="false" />
+        <img className="cmp__after" src={after} alt={afterLabel} draggable="false" />
+        <span className="cmp__tag cmp__tag--a">{beforeLabel}</span>
+        <span className="cmp__tag cmp__tag--b">{afterLabel}</span>
+        <i className="cmp__bar" aria-hidden="true" />
+        <input type="range" min="0" max="100" value={pos} onChange={(e) => setPos(Number(e.target.value))} aria-label={`Slide between ${beforeLabel.toLowerCase()} and ${afterLabel.toLowerCase()}`} />
+      </div>
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+  )
+}
+
 // One project as a full page: hero, a contents rail that follows the reader, the write-up,
 // optional screenshots (`shots` on the project), and previous / next navigation.
 export default function CaseStudy({ project, onClose, onContact }) {
@@ -28,7 +46,10 @@ export default function CaseStudy({ project, onClose, onContact }) {
     ['architecture', 'Architecture'],
     ...(project.flow ? [['flow', 'Flow']] : []),
     ...(shots.length ? [['screens', 'Screens']] : []),
+    ...(project.figma ? [['prototype', 'Prototype']] : []),
+    ...(project.compare ? [['compare', 'Before & after']] : []),
     ['outcomes', 'Outcomes'],
+    ...(project.reflection ? [['reflection', 'Looking back']] : []),
   ]
 
   // focus goes back to whatever opened the page (its card button) when it closes
@@ -181,6 +202,22 @@ export default function CaseStudy({ project, onClose, onContact }) {
               </section>
             )}
 
+            {project.figma && (
+              <section className="cs__sec reveal" data-sec="prototype">
+                <h2>Prototype</h2>
+                <div className="proto">
+                  <iframe title={`${project.name} prototype`} src={`https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(project.figma)}`} loading="lazy" allowFullScreen />
+                </div>
+              </section>
+            )}
+
+            {project.compare && (
+              <section className="cs__sec reveal" data-sec="compare">
+                <h2>Before &amp; after</h2>
+                <Compare {...project.compare} />
+              </section>
+            )}
+
             <section className="cs__sec reveal" data-sec="outcomes">
               <h2>Outcomes</h2>
               <ul className="cs__out">
@@ -192,6 +229,25 @@ export default function CaseStudy({ project, onClose, onContact }) {
                 ))}
               </ul>
             </section>
+
+            {project.reflection && (
+              <section className="cs__sec reveal" data-sec="reflection">
+                <h2>Looking back</h2>
+                <div>
+                  <p className="cs__big">{Array.isArray(project.reflection) ? project.reflection[0] : project.reflection}</p>
+                  {Array.isArray(project.reflection) && project.reflection.slice(1).map((r) => <p className="cs__more" key={r}>{r}</p>)}
+                </div>
+              </section>
+            )}
+
+            {project.quote && (
+              <figure className="cs__quote reveal">
+                <blockquote>{project.quote.text}</blockquote>
+                <figcaption>
+                  {project.quote.name} <span>{project.quote.role}</span>
+                </figcaption>
+              </figure>
+            )}
           </div>
         </div>
 

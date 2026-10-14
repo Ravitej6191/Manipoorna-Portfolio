@@ -21,14 +21,15 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 
 | # | Section | What it is |
 |---|---|---|
-| 01 | Home | Name and the exploded stack drawing |
+| 01 | Home | Name, intro and the developer's desk drawing |
 | 02 | About | Summary and an at-a-glance block |
-| 03 | Projects | Projects as isometric diagrams, each with its own page (`#/work/talus-pay`, `#/work/schneider-electric`, `#/work/b2b-talent-hub`) |
+| 03 | Projects | Projects as diagrams, each with its own page at `/work/<id>/` (case study, flow chart, optional screens, prototype and before/after) |
 | 04 | Code | A git-graph drawing of the workflow, plus live public repositories once a GitHub URL is set |
 | 05 | Experience | Work history and education |
 | 06 | Skills | Technologies grouped by area |
-| 07 | Kind words | Testimonials |
-| 08 | Contact | A message form, plus email, LinkedIn and résumé links |
+| 07 | Notes | Short write-ups. Appears only once `src/data/notes.js` has entries |
+| 08 | Kind words | Testimonials |
+| 09 | Contact | A message form, plus email, LinkedIn and résumé links |
 
 ## Content to fill in
 
@@ -56,7 +57,16 @@ The site is static: `npm run build` writes `dist/`. On Vercel or Netlify, import
 - `VITE_EMAILJS_PUBLIC_KEY`: your EmailJS public key (the contact form).
 - `VITE_SITE_URL`: the final address, such as `https://yourname.com`. It fills the canonical link, share image and structured data. Without it those tags are left out.
 
-Project pages use hash links (`/#/work/talus-pay`), so no server rewrite rules are needed.
+Project pages are real paths (`/work/talus-pay/`). The build writes a static page for each one, with its own title, description and share image, plus `404.html`, `sitemap.xml` and `robots.txt`. Old `#/work/...` links are forwarded to the new paths. Headers (a Content-Security-Policy and friends) are in `vercel.json` and `public/_headers` for Vercel and Netlify. If a project is added, run `npm run og` to make its share image.
+
+## Features worth knowing
+
+- **Command palette:** Ctrl+K (Cmd+K on a Mac) or `/`. Jump to a section, open a project, switch the look, copy the email, open GitHub or LinkedIn.
+- **404:** an unknown address shows a terminal-style page.
+- **Look:** a saved choice wins; otherwise Blueprint at night (7pm to 6am) or when the system prefers dark.
+- **Availability and booking:** set `availability` and `booking` in `src/data/profile.js`; both stay hidden while empty.
+- **Project extras (all optional):** `links`, `shots`, `figma`, `compare`, `reflection` and `quote` in `src/data/projects.js`.
+- **Tests:** `npm test` (after a build) checks the content and the build output. `.github/workflows/ci.yml` runs it with Lighthouse on every push.
 
 ## Contact form
 

@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ABOUT, EXPERIENCE, EDUCATION, SKILLS } from '../data/about.js'
 import { PROFILE, CONTACT_LINKS } from '../data/profile.js'
 import { TESTIMONIALS } from '../data/proof.js'
+import { NOTES } from '../data/notes.js'
+import { copyEmail } from './Palette.jsx'
 import { SheetHead } from './Chrome.jsx'
 
 /* ───────── about ───────── */
 export function About() {
   return (
     <section id="about" className="sheet details" aria-label="About">
-      <SheetHead n="02" title="About" note="Who I am, at a glance." />
+      <SheetHead id="about" title="About" note="Who I am, at a glance." />
       <div className="rev__intro reveal">
         <p>{ABOUT.summary}</p>
         <dl className="titleblock titleblock--2" aria-label="At a glance">
@@ -26,9 +28,28 @@ export function About() {
 
 /* ───────── experience + education ───────── */
 export function Experience() {
+  const rail = useRef()
+  useEffect(() => {
+    const update = () => {
+      const el = rail.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      const p = (innerHeight * 0.65 - r.top) / r.height
+      el.style.setProperty('--p', Math.max(0, Math.min(1, p)).toFixed(3))
+    }
+    update()
+    addEventListener('scroll', update, { passive: true })
+    addEventListener('resize', update)
+    return () => {
+      removeEventListener('scroll', update)
+      removeEventListener('resize', update)
+    }
+  }, [])
   return (
     <section id="experience" className="sheet revisions" aria-label="Experience and education">
-      <SheetHead n="05" title="Experience" note="Where I have worked and studied." />
+      <SheetHead id="experience" title="Experience" note="Where I have worked and studied." />
+      <div className="exp" ref={rail}>
+        <i className="exp__rail" aria-hidden="true" />
       <table className="revtable reveal">
         <caption className="sr-only">Experience and education</caption>
         <thead>
@@ -65,6 +86,7 @@ export function Experience() {
           ))}
         </tbody>
       </table>
+      </div>
     </section>
   )
 }
@@ -73,7 +95,7 @@ export function Experience() {
 export function Skills() {
   return (
     <section id="skills" className="sheet materials" aria-label="Skills">
-      <SheetHead n="06" title="Skills" note="The tools and technologies I work with." />
+      <SheetHead id="skills" title="Skills" note="The tools and technologies I work with." />
       <table className="bom reveal">
         <caption className="sr-only">Skills</caption>
         <thead>
@@ -103,6 +125,28 @@ export function Skills() {
   )
 }
 
+/* ───────── notes (only when there are some) ───────── */
+export function Notes() {
+  if (!NOTES.length) return null
+  return (
+    <section id="notes" className="sheet notes" aria-label="Notes">
+      <SheetHead id="notes" title="Notes" note="Short write-ups on things I have built and learned." />
+      <ul className="notes__list">
+        {NOTES.map((n) => (
+          <li key={n.title} className="reveal">
+            <a href={n.url} target="_blank" rel="noreferrer">
+              <time dateTime={n.date}>{new Date(n.date).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+              <b>{n.title}</b>
+              <p>{n.summary}</p>
+              <span aria-hidden="true">Read ↗</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 /* ───────── kind words ───────── */
 // A profile icon: the person's photo if  is set on their entry and loads, otherwise a drawn head-and-shoulders.
 function Avatar({ name, photo, tone }) {
@@ -123,7 +167,7 @@ function Avatar({ name, photo, tone }) {
 export function Testimonials() {
   return (
     <section id="testimonials" className="sheet kind" aria-label="Testimonials">
-      <SheetHead n="07" title="Kind words" note="What the people I work with say." />
+      <SheetHead id="testimonials" title="Kind words" note="What the people I work with say." />
       <div className="kind__grid">
         {TESTIMONIALS.map((t, i) => (
           <figure className="quote reveal" key={i} style={{ '--d': i * 0.12 + 's' }}>
@@ -239,13 +283,19 @@ export function Contact() {
 
   return (
     <section id="contact" className="sheet transmittal" aria-label="Contact">
-      <SheetHead n="08" title="Contact" note="Open to hearing about interesting work." />
+      <SheetHead id="contact" title="Contact" note="Open to hearing about interesting work." />
       <div className="tm__grid">
         <div className="tm__intro reveal">
           <h2>Let’s work together.</h2>
           <p>
             Send me a message below, or write directly.
           </p>
+          {PROFILE.availability && (
+            <p className="tm__avail">
+              <i aria-hidden="true" />
+              {PROFILE.availability}
+            </p>
+          )}
           <ul className="tm__links">
             {CONTACT_LINKS.map(([label, href]) => (
               <li key={label}>
@@ -254,6 +304,18 @@ export function Contact() {
                 </a>
               </li>
             ))}
+            {PROFILE.booking && (
+              <li>
+                <a href={PROFILE.booking} target="_blank" rel="noreferrer">
+                  Book a call <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            )}
+            <li>
+              <button type="button" onClick={copyEmail}>
+                Copy email address <span aria-hidden="true">⧉</span>
+              </button>
+            </li>
           </ul>
         </div>
         <form className="tm__form reveal" onSubmit={submit} aria-busy={state === 'sending'}>

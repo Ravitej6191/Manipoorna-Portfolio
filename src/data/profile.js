@@ -11,6 +11,9 @@ export const PROFILE = {
   github: 'https://github.com/ManiPoorna',
   resume: `${import.meta.env.BASE_URL}Mani_Poorna_Resume.pdf`, // note: the PDF itself lists a phone number
   photo: `${import.meta.env.BASE_URL}profile.jpg`, // drop a portrait at /public/profile.jpg
+  // Both hidden while empty. Fill in only what is true.
+  availability: '', // e.g. 'Open to new roles from January · replies within a day'
+  booking: '', // a Calendly or Cal.com link; adds a "Book a call" button
 }
 
 export const CONTACT_LINKS = [
