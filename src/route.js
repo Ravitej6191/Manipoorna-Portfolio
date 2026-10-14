@@ -23,7 +23,7 @@ export const usePath = () => useSyncExternalStore(subscribe, () => window.locati
 export const parseRoute = (pathname) => {
   const p = inside(pathname)
   if (p === '/' || p === '/index.html') return { kind: 'home' }
-  const m = /^\/work\/([\w-]+)\/?$/.exec(p)
+  const m = /^\/work\/([\w-]+)(?:\/(?:index\.html)?)?$/.exec(p)
   return m ? { kind: 'work', id: m[1] } : { kind: 'missing' }
 }
 

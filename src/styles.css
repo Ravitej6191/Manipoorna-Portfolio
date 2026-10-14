@@ -530,7 +530,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 38; pointer-event
 .term { margin: 0; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--ink) 92%, var(--paper)); color: var(--paper); }
 .term__bar { display: flex; align-items: center; gap: 6px; padding: 0.55rem 0.8rem; border-bottom: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); }
 .term__bar i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--paper) 55%, transparent); display: block; }
-.term__bar span { margin-left: auto; font: 500 10px var(--mono); letter-spacing: 0.12em; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+.term__bar span { margin-left: auto; font: 500 10px var(--mono); letter-spacing: 0.12em; color: color-mix(in srgb, var(--paper) 88%, transparent); }
 .term ol { padding: 0.5rem 0.8rem 0.8rem; display: grid; gap: 0.5rem; }
 .term li { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.8rem; align-items: baseline; font: 400 12px/1.5 var(--mono); animation: pop 0.5s ease both; animation-delay: calc(var(--n) * 0.12s + 0.3s); }
 .term code { color: var(--red); font: inherit; }
