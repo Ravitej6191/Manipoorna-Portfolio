@@ -34,7 +34,7 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 
 - **Photo:** `public/profile.jpg`.
 - **GitHub:** set `github` in `src/data/profile.js`. The Code section then loads public repositories, stars and top language from the GitHub API.
-- **Content still to fill in:** Talus Pay's details (`src/data/projects.js`) and the testimonial quotes (`src/data/proof.js`).
+- **Worth checking:** Talus Pay's text (`src/data/projects.js`) is written from its name and the style of the other two projects, and the testimonial quotes (`src/data/proof.js`) are drafted from each role. Replace them with the real details and words.
 - **Project pages:** add `links: { live, repo }` and `shots: [{ src, alt, caption }]` to a project, and the buttons and a Screens section appear.
 
 ## What still needs real input
@@ -48,6 +48,15 @@ Anything not on the résumé is left empty and hidden, never invented.
 | Project links | add `links: { live, repo }` to a project in `src/data/projects.js` |
 | Metrics and dates | `outcomes` and `meta` in `src/data/projects.js` (currently qualitative, from the résumé) |
 | Site address | `VITE_SITE_URL`, for the canonical link and share image |
+
+## Deploy
+
+The site is static: `npm run build` writes `dist/`. On Vercel or Netlify, import the repository (build command `npm run build`, output folder `dist`) and add these environment variables:
+
+- `VITE_EMAILJS_PUBLIC_KEY`: your EmailJS public key (the contact form).
+- `VITE_SITE_URL`: the final address, such as `https://yourname.com`. It fills the canonical link, share image and structured data. Without it those tags are left out.
+
+Project pages use hash links (`/#/work/talus-pay`), so no server rewrite rules are needed.
 
 ## Contact form
 

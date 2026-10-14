@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PROFILE } from '../data/profile.js'
 import { SheetHead } from './Chrome.jsx'
 
@@ -11,14 +11,14 @@ const getJson = (url, signal) => fetch(url, { signal }).then((r) => (r.ok ? r.js
 
 // One request for the repositories, three for the latest commits, and a public heatmap feed. Each panel appears
 // as soon as its data arrives, and a panel whose request fails is simply left out. Cached for the session.
-function useGithub(user) {
+function useGithub(user, active) {
   const [s, setS] = useState({ status: user ? 'loading' : 'none', repos: null, log: null, cal: null })
   useEffect(() => {
-    if (!user) return
+    if (!user || !active) return
     const key = 'bp:gh3:' + user
     try {
-      const hit = JSON.parse(sessionStorage.getItem(key))
-      if (hit) return setS({ status: 'ready', ...hit })
+      const hit = JSON.parse(localStorage.getItem(key))
+      if (hit && Date.now() - hit.at < 6 * 36e5) return setS({ status: 'ready', repos: hit.repos, log: hit.log, cal: hit.cal })
     } catch {
       /* no cache */
     }
@@ -61,13 +61,13 @@ function useGithub(user) {
       if (ctl.signal.aborted) return
       setS((o) => ({ ...o, status: o.repos || o.cal ? 'ready' : 'error' }))
       try {
-        sessionStorage.setItem(key, JSON.stringify({ repos: part.repos ?? null, log: part.log ?? null, cal: part.cal ?? null }))
+        localStorage.setItem(key, JSON.stringify({ at: Date.now(), repos: part.repos ?? null, log: part.log ?? null, cal: part.cal ?? null }))
       } catch {
         /* storage blocked */
       }
     })
     return () => ctl.abort()
-  }, [user])
+  }, [user, active])
   return s
 }
 
@@ -200,10 +200,19 @@ function GitLog({ log }) {
 }
 
 export default function Code() {
-  const { status, repos, log, cal } = useGithub(USER)
+  // nothing is requested until the section is close to the screen
+  const root = useRef()
+  const [near, setNear] = useState(false)
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && (setNear(true), io.disconnect()), { rootMargin: '600px 0px' })
+    io.observe(root.current)
+    const idle = setTimeout(() => setNear(true), 8000) // still loads if the section is never scrolled to
+    return () => (io.disconnect(), clearTimeout(idle))
+  }, [])
+  const { status, repos, log, cal } = useGithub(USER, near)
 
   return (
-    <section id="code" className="sheet code" aria-label="Code and GitHub">
+    <section id="code" className="sheet code" aria-label="Code and GitHub" ref={root}>
       <SheetHead n="04" title="Code" note="Small, reviewed changes that reach main through CI." />
       <div className="code__grid">
         <div className="code__left">

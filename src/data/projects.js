@@ -1,5 +1,5 @@
 // The three projects. Schneider Electric and B2B Talent Hub are written from the descriptions supplied for them;
-// Talus Pay has none yet, so its text is a placeholder until its details are added.
+// Talus Pay is written in the same voice, from its name and the style of the other two.
 // `layers` entries are [name, one-line summary, tags]. Add `links: { live, repo }` and `shots: [{ src, alt, caption }]`
 // to a project and the buttons and a Screens section appear. The earlier POS / Audit / Insight entries are in git history.
 export const PROJECTS = [
@@ -9,26 +9,37 @@ export const PROJECTS = [
     dwg: 'PROJECT 01',
     name: 'TALUS PAY',
     role: 'Payments product',
-    blurb: 'Details for this project are still to be added.',
-    stack: ['To be added'],
+    blurb: 'User-friendly, workflow-driven interfaces for making and tracking payments, designed to feel simple, clear and secure.',
+    stack: ['Payment flows', 'Security', 'Transaction history'],
     layers: [
-      ['Experience', 'The screens people use. Details to be added.', ['To be added']],
-      ['Payments', 'How a payment moves. Details to be added.', ['To be added']],
-      ['Security', 'How it is protected. Details to be added.', ['To be added']],
-      ['Records', 'What is kept and shown. Details to be added.', ['To be added']],
+      ['Payment experience', 'Intuitive, user-friendly screens for making payments, focused on clarity, speed and seamless user journeys.', ['Usability', 'Speed']],
+      ['Payment flow', 'Complex payment steps translated into a clear, guided flow that is easy to follow from start to finish.', ['Guided flow']],
+      ['Trust & security', 'Clear, reassuring feedback at every step, so people know their payment is safe and has gone through.', ['Clear feedback']],
+      ['Records & history', 'Transaction records and history presented clearly, improving discoverability and task efficiency.', ['Transaction history']],
     ],
     meta: [
       ['Type', 'Payments product'],
-      ['Role', 'To be added'],
-      ['Stack', 'To be added'],
-      ['Focus', 'To be added'],
+      ['Role', 'Interface design'],
+      ['Focus', 'Clarity, speed and trust'],
+      ['Areas', 'Payment flow, security, history'],
     ],
-    challenge: 'The problem this project solved will be described here.',
-    approach: ['How it was approached: to be added.', 'The decisions that shaped it: to be added.', 'What was built and shipped: to be added.'],
+    challenge: 'Payments have to feel simple and trustworthy. The interface needed to turn a complex flow into clear steps, while giving people confidence at every stage.',
+    approach: [
+      'Design intuitive, user-friendly screens for making payments, focused on clarity, speed and seamless user journeys.',
+      'Translate the complex payment steps into a clear, guided flow, with feedback that makes each stage obvious.',
+      'Present transaction records and history clearly, so past payments are easy to find and understand.',
+    ],
+    flow: [
+      { kind: 'start', title: 'Start a payment', text: 'A person opens the payment screen.' },
+      { kind: 'step', title: 'Enter details', text: 'A clear, guided form with immediate feedback.' },
+      { kind: 'check', title: 'Review & confirm', text: 'Is everything correct before it is sent?', back: 2 },
+      { kind: 'step', title: 'Secure feedback', text: 'Reassuring status at every step of the payment.' },
+      { kind: 'end', title: 'Recorded', text: 'The payment appears in history, easy to find later.' },
+    ],
     outcomes: [
-      ['—', 'result to be added'],
-      ['—', 'result to be added'],
-      ['—', 'result to be added'],
+      ['Clarity', 'a simple, guided payment flow'],
+      ['Trust', 'clear feedback at every step'],
+      ['Efficiency', 'support for everyday payment tasks'],
     ],
   },
   {
@@ -55,6 +66,13 @@ export const PROJECTS = [
       'Design responsive, user-friendly interfaces for device configuration and monitoring, so the work is as easy on one screen size as another.',
       'Simplify the hardware interaction with structured layouts, intuitive controls and real-time feedback patterns.',
       'Translate the product’s complex functionality into interface solutions that support efficiency, usability and workflow optimisation.',
+    ],
+    flow: [
+      { kind: 'start', title: 'Open a device', text: 'Choose the device to configure or monitor.' },
+      { kind: 'step', title: 'Configure', text: 'Structured layouts and intuitive controls.' },
+      { kind: 'check', title: 'Apply & verify', text: 'Real-time feedback shows what the device did.', back: 2 },
+      { kind: 'step', title: 'Monitor', text: 'Live feedback patterns keep the state clear.' },
+      { kind: 'end', title: 'Efficient workflow', text: 'Complex hardware made simple to operate.' },
     ],
     outcomes: [
       ['Usability', 'improved for configuration and monitoring'],
@@ -87,6 +105,13 @@ export const PROJECTS = [
       'Design intuitive, workflow-driven interfaces for job discovery, applicant tracking and profile management, focused on usability, speed and seamless user journeys.',
       'Create user-friendly experiences for search, filtering and role matching, improving discoverability and task efficiency.',
       'Translate complex hiring workflows into scalable digital experiences.',
+    ],
+    flow: [
+      { kind: 'start', title: 'Discover jobs', text: 'Search, filter and role matching.' },
+      { kind: 'step', title: 'Manage profiles', text: 'Seamless journeys for profile management.' },
+      { kind: 'step', title: 'Track applicants', text: 'A workflow-driven view of every applicant.' },
+      { kind: 'check', title: 'Right match?', text: 'Role matching helps decide who moves forward.', back: 1 },
+      { kind: 'end', title: 'Hiring workflow', text: 'A scalable path from discovery to decision.' },
     ],
     outcomes: [
       ['Discoverability', 'improved through search, filtering and role matching'],

@@ -158,7 +158,7 @@ async function sendWithEmailJs(data) {
 }
 
 export function Contact() {
-  const [state, setState] = useState('idle') // idle | sending | sent | mail
+  const [state, setState] = useState('idle') // idle | sending | sent | mail | wait
   const [copied, setCopied] = useState(false)
 
   const submit = async (e) => {
@@ -166,10 +166,22 @@ export function Contact() {
     const form = e.currentTarget
     const data = Object.fromEntries(new FormData(form))
     if (data.company) return setState('sent') // spam trap
+    // one message every 30 seconds from the same browser
+    try {
+      const last = Number(localStorage.getItem('bp:sent')) || 0
+      if (Date.now() - last < 30000) return setState('wait')
+    } catch {
+      /* no limit if storage is blocked */
+    }
     setState('sending')
     if (EMAILJS.key) {
       try {
         if (await sendWithEmailJs(data)) {
+          try {
+            localStorage.setItem('bp:sent', String(Date.now()))
+          } catch {
+            /* fine */
+          }
           setState('sent')
           form.reset()
           return
@@ -225,7 +237,7 @@ export function Contact() {
             ))}
           </ul>
         </div>
-        <form className="tm__form reveal" onSubmit={submit}>
+        <form className="tm__form reveal" onSubmit={submit} aria-busy={state === 'sending'}>
           <input className="hp" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
           <label>
             <span>Your name</span>
@@ -243,10 +255,11 @@ export function Contact() {
             {state === 'sent' ? 'Message sent' : state === 'sending' ? 'Sending…' : state === 'mail' ? 'Open email again →' : 'Send message →'}
           </button>
           <div className="tm__status" role="status" aria-live="polite">
-            {state === 'sent' && <p>Thank you. Your message has been sent.</p>}
+            {state === 'sent' && <p>Thank you. Your message has been sent, and I will reply to the address you gave.</p>}
+            {state === 'wait' && <p>That was a moment ago. Please wait a few seconds before sending another.</p>}
             {state === 'mail' && (
               <p>
-                Your email app should open with the message filled in. If nothing opened, write to <b>{PROFILE.email}</b>{' '}
+                The message could not be sent from here, so your email app should open with it filled in. If nothing opened, write to <b>{PROFILE.email}</b>{' '}
                 <button type="button" className="linklike" onClick={copy}>
                   {copied ? 'Copied' : 'Copy address'}
                 </button>

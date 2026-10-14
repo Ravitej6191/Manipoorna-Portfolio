@@ -4,6 +4,7 @@ import { PROFILE } from '../data/profile.js'
 import { openWork } from '../route.js'
 import { Legend, Spec } from './Work.jsx'
 import ProjectArt from './Art.jsx'
+import Flow from './Flow.jsx'
 import useReveal from './useReveal.js'
 
 // One project as a full page: hero, a contents rail that follows the reader, the write-up,
@@ -25,6 +26,7 @@ export default function CaseStudy({ project, onClose, onContact }) {
     ['problem', 'The problem'],
     ['approach', 'Approach'],
     ['architecture', 'Architecture'],
+    ...(project.flow ? [['flow', 'Flow']] : []),
     ...(shots.length ? [['screens', 'Screens']] : []),
     ['outcomes', 'Outcomes'],
   ]
@@ -146,6 +148,13 @@ export default function CaseStudy({ project, onClose, onContact }) {
               <h2>Architecture</h2>
               <Legend layers={project.layers} hover={hover} setHover={setHover} />
             </section>
+
+            {project.flow && (
+              <section className="cs__sec reveal" data-sec="flow">
+                <h2>Flow</h2>
+                <Flow steps={project.flow} />
+              </section>
+            )}
 
             {shots.length > 0 && (
               <section className="cs__sec reveal" data-sec="screens">

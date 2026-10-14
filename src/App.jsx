@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Header, goTo } from './ui/Chrome.jsx'
+import { Header, BackToTop, goTo } from './ui/Chrome.jsx'
 import Cover from './ui/Cover.jsx'
 import Work from './ui/Work.jsx'
 import Code from './ui/Code.jsx'
@@ -45,8 +45,11 @@ export default function App() {
     history.scrollRestoration = 'manual'
   }, [])
 
+  // the tab title, bookmarks and history show which project is open
+  const desc = useRef(document.querySelector('meta[name="description"]')?.getAttribute('content') || '')
   useEffect(() => {
     document.title = project ? `${project.name} — ${project.role} · Mani Poorna` : base.current
+    document.querySelector('meta[name="description"]')?.setAttribute('content', project ? project.blurb : desc.current)
   }, [project])
 
   // the page behind an open drawing stays put, and out of the tab order
@@ -69,8 +72,11 @@ export default function App() {
   return (
     <>
       <div className="page" ref={page} inert={!!project}>
+        <a className="skip" href="#cover" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus(), goTo('cover'))}>
+          Skip to content
+        </a>
         <Header theme={theme} onTheme={toggleTheme} />
-        <main>
+        <main id="main" tabIndex={-1}>
           <Cover />
           <About />
           <Work />
@@ -82,6 +88,7 @@ export default function App() {
         </main>
       </div>
       <div className="frame" aria-hidden="true" />
+      {!project && <BackToTop />}
       {project && <CaseStudy key={project.id} project={project} onClose={onClose} onContact={onContact} />}
     </>
   )
