@@ -1,6 +1,5 @@
 import { AI as DATA } from '../data/ai.js'
 import { SheetHead } from './Chrome.jsx'
-import Flow from './Flow.jsx'
 
 // A line icon for each way AI is used, drawn in the same pen as the rest of the site.
 const ICON = {
@@ -31,11 +30,6 @@ export default function AI() {
             </ul>
           </article>
         ))}
-      </div>
-
-      <h3 className="ai__sub reveal">The loop</h3>
-      <div className="reveal ai__flow">
-        <Flow steps={DATA.loop} />
       </div>
 
       <h3 className="ai__sub reveal">The toolbox</h3>

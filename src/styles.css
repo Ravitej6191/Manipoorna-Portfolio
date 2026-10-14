@@ -739,7 +739,6 @@ kbd { font: 500 10px var(--mono); letter-spacing: 0.08em; padding: 0.15rem 0.4re
 .ai__card p { font-size: 1rem; font-weight: 300; line-height: 1.6; color: var(--ink-2); }
 .ai__card .chips { margin-top: auto; padding-top: 0.4rem; }
 .ai__sub { margin: clamp(2.4rem, 6vw, 4rem) 0 1.2rem; font: 500 12px var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-2); }
-.ai__flow { padding: clamp(0.4rem, 2vw, 1rem) 0; }
 .ai__tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.8rem); }
 .ai__tools p { font: 500 10px var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 0.6rem; border-bottom: 1px solid var(--ink); }
 .ai__tools ul { margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }

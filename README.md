@@ -27,7 +27,7 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 | 04 | Experience | Work history and education, with a rail that fills as you read |
 | 05 | Skills | Technologies grouped by area |
 | 06 | Code | A git-graph drawing of the workflow, plus live public repositories once a GitHub URL is set |
-| 07 | AI | How AI is used (code review, debugging, dev tools), the human-in-the-loop flow chart and the tools, from `src/data/ai.js` |
+| 07 | AI | How AI is used (code review, debugging, dev tools, learning) and the tools, from `src/data/ai.js` |
 | 08 | Kind words | Testimonials |
 | 09 | Contact | A message form, plus email (with a copy icon), LinkedIn and resume links |
 

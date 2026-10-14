@@ -28,14 +28,6 @@ export const AI = {
       tools: ['Perplexity', 'Gemini', 'Claude'],
     },
   ],
-  // The loop, drawn as a flow chart: the human check is the point of the whole thing.
-  loop: [
-    { kind: 'start', title: 'Describe the task', text: 'Give the context: the file, the error, the goal.' },
-    { kind: 'step', title: 'AI drafts', text: 'A suggestion, a review note or a hypothesis.' },
-    { kind: 'check', title: 'I review it', text: 'Does it fit this code and this requirement?', back: 1 },
-    { kind: 'step', title: 'Test it', text: 'Run it, add a test, try the edge cases.' },
-    { kind: 'end', title: 'Ship it', text: 'Reviewed, tested, and mine to maintain.' },
-  ],
   tools: [
     { group: 'AI assistants', items: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity'] },
     { group: 'In the editor', items: ['GitHub Copilot', 'Cursor', 'JetBrains AI Assistant'] },
