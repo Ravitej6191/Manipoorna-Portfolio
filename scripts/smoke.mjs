@@ -8,6 +8,7 @@ const check = (ok, message) => ok || failures.push(message)
 const { PROJECTS } = await import(new URL('../src/data/projects.js', import.meta.url))
 const { TESTIMONIALS } = await import(new URL('../src/data/proof.js', import.meta.url))
 const { ABOUT, EXPERIENCE, SKILLS } = await import(new URL('../src/data/about.js', import.meta.url))
+const { AI } = await import(new URL('../src/data/ai.js', import.meta.url))
 const art = readFileSync(new URL('../src/ui/Art.jsx', import.meta.url), 'utf8')
 
 // content
@@ -29,6 +30,12 @@ for (const p of PROJECTS) {
 }
 for (const t of TESTIMONIALS) check(t.name && t.role && t.quote, `testimonial from ${t.name || '?'} is incomplete`)
 check(ABOUT.summary.length > 40 && EXPERIENCE.length > 0 && SKILLS.length > 0, 'about, experience or skills data is empty')
+
+for (const [i, s] of AI.loop.entries()) {
+  check(['start', 'step', 'check', 'end'].includes(s.kind), `AI loop step ${i + 1} has an unknown kind`)
+  check(!s.back || (s.back >= 1 && s.back <= i), `AI loop step ${i + 1} loops back to a step that does not exist`)
+}
+check(AI.uses.length > 0 && AI.tools.every((g) => g.items.length > 0), 'the AI section has an empty list')
 
 // the build
 const dist = new URL('../dist/', import.meta.url)

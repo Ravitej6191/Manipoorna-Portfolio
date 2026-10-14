@@ -23,6 +23,24 @@ export default function Palette({ open, onClose, go, theme, onTheme }) {
   const input = useRef()
   const list = useRef()
 
+  // mounted while open and for a moment after, so closing can animate
+  const [mounted, setMounted] = useState(open)
+  const [leaving, setLeaving] = useState(false)
+  useEffect(() => {
+    if (open) {
+      setMounted(true)
+      setLeaving(false)
+      return
+    }
+    if (!mounted) return
+    setLeaving(true)
+    const t = setTimeout(() => {
+      setMounted(false)
+      setLeaving(false)
+    }, 180)
+    return () => clearTimeout(t)
+  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const items = useMemo(() => {
     const out = [
       ...SHEETS.map((s) => ({ kind: 'Go to', label: s.label, hint: s.n, keys: s.id, run: () => go(s.id) })),
@@ -59,7 +77,7 @@ export default function Palette({ open, onClose, go, theme, onTheme }) {
     list.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' })
   }, [at, shown])
 
-  if (!open) return null
+  if (!mounted) return null
 
   const run = (item) => {
     if (!item) return
@@ -86,7 +104,7 @@ export default function Palette({ open, onClose, go, theme, onTheme }) {
   }
 
   return (
-    <div className="pal" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={'pal' + (leaving ? ' pal--leaving' : '')} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="pal__box" role="dialog" aria-modal="true" aria-label="Command palette" onKeyDown={onKey}>
         <div className="pal__in">
           <span aria-hidden="true">›</span>

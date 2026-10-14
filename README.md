@@ -24,12 +24,14 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 | 01 | Home | Name, intro and the developer's desk drawing |
 | 02 | About | Summary and an at-a-glance block |
 | 03 | Projects | Projects as diagrams, each with its own page at `/work/<id>/` (case study, flow chart, optional screens, prototype and before/after) |
-| 04 | Code | A git-graph drawing of the workflow, plus live public repositories once a GitHub URL is set |
-| 05 | Experience | Work history and education |
-| 06 | Skills | Technologies grouped by area |
-| 07 | Notes | Short write-ups. Appears only once `src/data/notes.js` has entries |
+| 04 | Experience | Work history and education, with a rail that fills as you read |
+| 05 | Skills | Technologies grouped by area |
+| 06 | Code | A git-graph drawing of the workflow, plus live public repositories once a GitHub URL is set |
+| 07 | AI | How AI is used (code review, debugging, dev tools), the human-in-the-loop flow chart and the tools, from `src/data/ai.js` |
 | 08 | Kind words | Testimonials |
-| 09 | Contact | A message form, plus email, LinkedIn and résumé links |
+| 09 | Contact | A message form, plus email (with a copy icon), LinkedIn and resume links |
+
+A Notes section (`src/data/notes.js`) appears between AI and Kind words once it has entries.
 
 ## Content to fill in
 

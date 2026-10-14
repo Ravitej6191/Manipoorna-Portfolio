@@ -8,11 +8,11 @@ export const TESTIMONIALS = [
   {
     quote: 'Picks up a feature end to end, from the React screen to the API behind it, and keeps the code clear for the rest of the team. Calm when things are moving fast.',
     name: 'Puneeth',
-    role: 'FDE',
+    role: 'Full Stack Developer',
   },
   {
-    quote: 'Clear updates, no surprises, and work that lands when it was promised. Explains technical trade-offs in a way the whole team can follow.',
-    name: 'Rishi',
-    role: 'Project Manager',
+    quote: 'Easy to pair with on either side of the stack. The API and the screen always line up, the reviews are thoughtful, and the handoffs are clean.',
+    name: 'Govind Raj',
+    role: 'Full Stack Developer',
   },
 ]

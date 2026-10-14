@@ -19,6 +19,6 @@ export const PROFILE = {
 export const CONTACT_LINKS = [
   [PROFILE.email, `mailto:${PROFILE.email}`],
   ['LinkedIn', PROFILE.linkedin],
-  ['Résumé', PROFILE.resume],
+  ['Resume', PROFILE.resume],
   ['GitHub', PROFILE.github],
 ].filter(([, href]) => href)

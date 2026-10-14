@@ -3,6 +3,7 @@ import { Header, BackToTop, goTo } from './ui/Chrome.jsx'
 import Cover from './ui/Cover.jsx'
 import Work from './ui/Work.jsx'
 import Code from './ui/Code.jsx'
+import AI from './ui/AI.jsx'
 import { About, Experience, Skills, Notes, Testimonials, Contact } from './ui/Sheets.jsx'
 import CaseStudy from './ui/CaseStudy.jsx'
 import useReveal from './ui/useReveal.js'
@@ -28,6 +29,11 @@ export default function App() {
     }
   })
   const toggleTheme = useCallback(() => {
+    // for a moment every colour change eases instead of snapping
+    const root = document.documentElement
+    root.classList.add('theming')
+    clearTimeout(window.__theming)
+    window.__theming = setTimeout(() => root.classList.remove('theming'), 650)
     setTheme((t) => {
       const next = t === 'paper' ? 'blueprint' : 'paper'
       try {
@@ -42,6 +48,23 @@ export default function App() {
     document.documentElement.dataset.theme = theme
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'paper' ? '#f3f0e8' : '#0d3b8e')
   }, [theme])
+  // the project page stays mounted for a moment after it is closed, so it can fade out
+  const [shown, setShown] = useState(project)
+  const [leaving, setLeaving] = useState(false)
+  useEffect(() => {
+    if (project) {
+      setShown(project)
+      setLeaving(false)
+      return
+    }
+    setLeaving(true)
+    const t = setTimeout(() => {
+      setShown(null)
+      setLeaving(false)
+    }, 280)
+    return () => clearTimeout(t)
+  }, [project])
+
   const pending = useRef(null) // a sheet to scroll to once the open drawing has closed
 
   // the command palette: Ctrl+K, Cmd+K, or / when no field is focused
@@ -117,9 +140,10 @@ export default function App() {
           <Cover />
           <About />
           <Work />
-          <Code />
           <Experience />
           <Skills />
+          <Code />
+          <AI />
           <Notes />
           <Testimonials />
           <Contact />
@@ -129,7 +153,7 @@ export default function App() {
       {!project && <BackToTop />}
       <Palette open={palette} onClose={() => setPalette(false)} go={go} theme={theme} onTheme={toggleTheme} />
       <Toast />
-      {project && <CaseStudy key={project.id} project={project} onClose={onClose} onContact={onContact} />}
+      {shown && <CaseStudy key={shown.id} project={shown} leaving={leaving} onClose={onClose} onContact={onContact} />}
     </>
   )
 }

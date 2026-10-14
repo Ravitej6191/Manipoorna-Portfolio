@@ -297,13 +297,30 @@ export function Contact() {
             </p>
           )}
           <ul className="tm__links">
-            {CONTACT_LINKS.map(([label, href]) => (
+            {CONTACT_LINKS.map(([label, href]) =>
+              href.startsWith('mailto:') ? (
+                <li key={label} className="tm__mail">
+                  <a className="tm__mailtext" href={href}>
+                    {label}
+                  </a>
+                  <button type="button" className="tm__copy" onClick={copyEmail} aria-label="Copy email address" title="Copy email address">
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                      <rect x="7" y="7" width="10" height="10" />
+                      <path d="M13 7V3H3v10h4" />
+                    </svg>
+                  </button>
+                  <a className="tm__go" href={href} aria-label="Write an email">
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ) : (
               <li key={label}>
                 <a href={href} target={href.startsWith('mailto:') || href.endsWith('.pdf') ? undefined : '_blank'} rel="noreferrer" download={href.endsWith('.pdf') ? '' : undefined}>
                   {label} <span aria-hidden="true">{href.endsWith('.pdf') ? '↓' : '↗'}</span>
                 </a>
               </li>
-            ))}
+              ),
+            )}
             {PROFILE.booking && (
               <li>
                 <a href={PROFILE.booking} target="_blank" rel="noreferrer">
@@ -311,11 +328,6 @@ export function Contact() {
                 </a>
               </li>
             )}
-            <li>
-              <button type="button" onClick={copyEmail}>
-                Copy email address <span aria-hidden="true">⧉</span>
-              </button>
-            </li>
           </ul>
         </div>
         <form className="tm__form reveal" onSubmit={submit} aria-busy={state === 'sending'}>

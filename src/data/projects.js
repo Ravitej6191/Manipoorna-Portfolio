@@ -9,7 +9,7 @@
 export const PROJECTS = [
   {
     id: 'talus-pay',
-    accent: ['#1a8f5a', '#7be0b0'],
+    accent: ['#14724a', '#7be0b0'],
     dwg: 'PROJECT 01',
     name: 'TALUS PAY (POS)',
     role: 'Payments product',
@@ -48,7 +48,7 @@ export const PROJECTS = [
   },
   {
     id: 'schneider-electric',
-    accent: ['#b86e00', '#ffcf6b'],
+    accent: ['#8f5400', '#ffcf6b'],
     dwg: 'PROJECT 02',
     name: 'SCHNEIDER ELECTRIC',
     role: 'Device configuration and monitoring',

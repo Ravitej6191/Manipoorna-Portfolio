@@ -27,7 +27,7 @@ function Compare({ before, after, beforeLabel = 'Before', afterLabel = 'After', 
 
 // One project as a full page: hero, a contents rail that follows the reader, the write-up,
 // optional screenshots (`shots` on the project), and previous / next navigation.
-export default function CaseStudy({ project, onClose, onContact }) {
+export default function CaseStudy({ project, leaving = false, onClose, onContact }) {
   const root = useRef()
   const body = useRef()
   const bar = useRef()
@@ -94,7 +94,7 @@ export default function CaseStudy({ project, onClose, onContact }) {
   const hasLinks = project.links && (project.links.live || project.links.repo)
 
   return (
-    <div className="cs" style={accentStyle(project)} ref={root} tabIndex={-1} role="dialog" aria-modal="true" aria-label={`${project.name} case study`}>
+    <div className={'cs' + (leaving ? ' cs--leaving' : '')} style={accentStyle(project)} ref={root} tabIndex={-1} role="dialog" aria-modal="true" aria-label={`${project.name} case study`}>
       <div className="cs__bar">
         <button className="cs__back" onClick={onClose}>
           <span aria-hidden="true">←</span> Back to portfolio

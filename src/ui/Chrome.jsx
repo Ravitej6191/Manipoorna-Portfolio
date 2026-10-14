@@ -7,9 +7,10 @@ export const SHEETS = [
   { id: 'cover', label: 'Home' },
   { id: 'about', label: 'About' },
   { id: 'work', label: 'Projects' },
-  { id: 'code', label: 'Code' },
   { id: 'experience', label: 'Experience' },
   { id: 'skills', label: 'Skills' },
+  { id: 'code', label: 'Code' },
+  { id: 'ai', label: 'AI' },
   ...(NOTES.length ? [{ id: 'notes', label: 'Notes' }] : []),
   { id: 'testimonials', label: 'Kind words' },
   { id: 'contact', label: 'Contact' },
@@ -111,7 +112,7 @@ export function Header({ theme, onTheme, onPalette }) {
         <span>{theme === 'paper' ? 'Blueprint' : 'Paper'}</span>
       </button>
       <a className="hdr__cv" href={PROFILE.resume} download>
-        Résumé <span aria-hidden="true">↓</span>
+        Resume <span aria-hidden="true">↓</span>
       </a>
       <div className="hdr__bar" ref={bar} aria-hidden="true" />
     </header>
