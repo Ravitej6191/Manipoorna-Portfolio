@@ -40,7 +40,7 @@ function Drawing({ p, flip }) {
       <ProjectArt project={p} hover={hover} setHover={setHover} />
       <div className="drawing__body reveal">
         <p className="drawing__no">
-          {p.dwg} <span>/ {p.role}</span>{p.sample && <em className="sample">Sample</em>}
+          {p.dwg} <span>/ {p.role}</span>
         </p>
         <h3 className="drawing__name">{p.name}</h3>
         <p className="drawing__blurb">{p.blurb}</p>

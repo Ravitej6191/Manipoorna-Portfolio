@@ -79,7 +79,7 @@ export default function CaseStudy({ project, onClose, onContact }) {
         <header className="cs__hero" data-sec="overview">
           <div>
             <p className="tag">
-              {project.dwg} · Case study{project.sample && <em className="sample">Sample</em>}
+              {project.dwg} · Case study
             </p>
             <h1>{project.name}</h1>
             <p className="cs__role">{project.role}</p>

@@ -3,39 +3,72 @@ import { PROFILE } from '../data/profile.js'
 import { SheetHead } from './Chrome.jsx'
 
 // The username comes from the GitHub URL in src/data/profile.js. With none set, the section still shows the
-// workflow drawing, and says where to add the link. With one, it lists the real public repositories.
+// workflow drawing and says where to add the link. With one, it draws the real activity: a year of
+// contributions as a heatmap, a language bar, a `git log` of the latest commits, and the repositories.
 const USER = (PROFILE.github.match(/github\.com\/([^/?#]+)/i) || [])[1] || ''
 
-function useRepos(user) {
-  const [state, setState] = useState({ status: user ? 'loading' : 'none', repos: [] })
+const getJson = (url, signal) => fetch(url, { signal }).then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+
+// One request for the repositories, three for the latest commits, and a public heatmap feed. Each panel appears
+// as soon as its data arrives, and a panel whose request fails is simply left out. Cached for the session.
+function useGithub(user) {
+  const [s, setS] = useState({ status: user ? 'loading' : 'none', repos: null, log: null, cal: null })
   useEffect(() => {
     if (!user) return
-    const key = 'bp:repos:' + user
+    const key = 'bp:gh3:' + user
     try {
       const hit = JSON.parse(sessionStorage.getItem(key))
-      if (hit) return setState({ status: 'ready', repos: hit })
+      if (hit) return setS({ status: 'ready', ...hit })
     } catch {
       /* no cache */
     }
     const ctl = new AbortController()
-    fetch(`https://api.github.com/users/${user}/repos?per_page=100&sort=pushed`, { signal: ctl.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((all) => {
-        const repos = all
-          .filter((r) => !r.fork && !r.archived)
-          .sort((a, b) => b.stargazers_count - a.stargazers_count || new Date(b.pushed_at) - new Date(a.pushed_at))
-          .map((r) => ({ name: r.name, url: r.html_url, text: r.description, lang: r.language, stars: r.stargazers_count, forks: r.forks_count, pushed: r.pushed_at }))
-        try {
-          sessionStorage.setItem(key, JSON.stringify(repos))
-        } catch {
-          /* storage blocked */
-        }
-        setState({ status: 'ready', repos })
-      })
-      .catch((e) => e?.name !== 'AbortError' && setState({ status: 'error', repos: [] }))
+    const part = {}
+    const patch = (p) => {
+      Object.assign(part, p)
+      setS((o) => ({ ...o, status: 'ready', ...p }))
+    }
+
+    const reposP = getJson(`https://api.github.com/users/${user}/repos?per_page=100&sort=pushed`, ctl.signal).then(async (all) => {
+      const repos = all
+        .filter((r) => !r.fork && !r.archived)
+        .map((r) => ({ name: r.name, url: r.html_url, lang: r.language, stars: r.stargazers_count, pushed: r.pushed_at }))
+        .sort((a, b) => new Date(b.pushed) - new Date(a.pushed))
+      patch({ repos })
+      const lists = await Promise.allSettled(
+        repos.slice(0, 3).map((r) => getJson(`https://api.github.com/repos/${user}/${r.name}/commits?per_page=4`, ctl.signal).then((cs) => cs.map((c) => ({ repo: r.name, sha: c.sha.slice(0, 7), msg: c.commit.message.split('\n')[0], at: c.commit.author.date })))),
+      )
+      const log = lists.flatMap((l) => (l.status === 'fulfilled' ? l.value : [])).sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 6)
+      patch({ log })
+    })
+    // the last twelve months; if those are empty, the most recent calendar year that has any activity
+    const calP = getJson(`https://github-contributions-api.jogruber.de/v4/${user}?y=all`, ctl.signal).then((d) => {
+      const all = (d.contributions || []).map((c) => ({ date: c.date, n: c.count, lv: c.level }))
+      const sum = (l) => l.reduce((n, c) => n + c.n, 0)
+      const since = new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10)
+      let days = all.filter((c) => c.date >= since)
+      let label = 'in the last year'
+      if (!sum(days)) {
+        const years = [...new Set(all.map((c) => c.date.slice(0, 4)))].reverse()
+        const year = years.find((y) => sum(all.filter((c) => c.date.startsWith(y))) > 0)
+        days = year ? all.filter((c) => c.date.startsWith(year)) : []
+        label = 'in ' + year
+      }
+      patch({ cal: days.length && sum(days) ? { days, total: sum(days), label } : null })
+    })
+
+    Promise.allSettled([reposP, calP]).then(() => {
+      if (ctl.signal.aborted) return
+      setS((o) => ({ ...o, status: o.repos || o.cal ? 'ready' : 'error' }))
+      try {
+        sessionStorage.setItem(key, JSON.stringify({ repos: part.repos ?? null, log: part.log ?? null, cal: part.cal ?? null }))
+      } catch {
+        /* storage blocked */
+      }
+    })
     return () => ctl.abort()
   }, [user])
-  return state
+  return s
 }
 
 const ago = (iso) => {
@@ -45,6 +78,9 @@ const ago = (iso) => {
   if (days < 365) return rtf.format(-Math.round(days / 30), 'month')
   return rtf.format(-Math.round(days / 365), 'year')
 }
+
+const LANG = { JavaScript: '#f1c40f', TypeScript: '#3b82f6', Java: '#e07a3f', HTML: '#e34c26', CSS: '#7c5cd6', Python: '#4b8bbe', SCSS: '#c6538c', Shell: '#4eaa25', Kotlin: '#a97bff' }
+const langColor = (l) => LANG[l] || '#8a96b3'
 
 // How a change travels to main, drawn as a git graph. Illustrative: it is not this account's history.
 function GitGraph() {
@@ -74,11 +110,97 @@ function GitGraph() {
   )
 }
 
+// A year of contributions: one square a day, a column a week, drawn in column by column.
+function Heatmap({ cal }) {
+  const { days, total, label } = cal
+  const pad = new Date(days[0].date + 'T00:00:00').getDay() // blank squares so the first column starts on a Sunday
+  const cells = [...Array(pad).fill(null), ...days]
+  const cols = Math.ceil(cells.length / 7)
+  const W = cols * 14
+  const months = []
+  days.forEach((d, i) => {
+    const m = d.date.slice(5, 7)
+    const col = Math.floor((i + pad) / 7)
+    if (!months.length || months[months.length - 1].m !== m) months.push({ m, col })
+  })
+  const name = (m) => new Date(2000, Number(m) - 1, 1).toLocaleString('en', { month: 'short' }).toUpperCase()
+  return (
+    <figure className="hm pop">
+      <figcaption>
+        <b>{total.toLocaleString()}</b> contribution{total === 1 ? "" : "s"} {label}
+      </figcaption>
+      <svg viewBox={`0 0 ${W} 120`} role="img" aria-label={`${total} contributions ${label}, drawn as a calendar heatmap`}>
+        {months.slice(1).map(({ m, col }) => (
+          <text key={m + col} x={col * 14} y="9">{name(m)}</text>
+        ))}
+        {cells.map((c, i) =>
+          c ? (
+            <rect key={i} className={`hm__c hm__c--${c.lv}`} x={Math.floor(i / 7) * 14} y={18 + (i % 7) * 14} width="11" height="11" style={{ '--c': Math.floor(i / 7) }}>
+              <title>{`${c.n} contribution${c.n === 1 ? '' : 's'} on ${c.date}`}</title>
+            </rect>
+          ) : null,
+        )}
+      </svg>
+      <div className="hm__key" aria-hidden="true">
+        <span>LESS</span>
+        {[0, 1, 2, 3, 4].map((l) => (
+          <i key={l} className={`hm__c hm__c--${l}`} />
+        ))}
+        <span>MORE</span>
+      </div>
+    </figure>
+  )
+}
+
+function Languages({ repos }) {
+  const count = {}
+  repos.forEach((r) => r.lang && (count[r.lang] = (count[r.lang] || 0) + 1))
+  const list = Object.entries(count).sort((a, b) => b[1] - a[1])
+  const sum = list.reduce((n, [, c]) => n + c, 0)
+  if (!sum) return null
+  return (
+    <div className="langs pop">
+      <p>LANGUAGES, BY REPOSITORY</p>
+      <div className="langs__bar" role="img" aria-label={list.map(([l, c]) => `${l} ${Math.round((c / sum) * 100)}%`).join(', ')}>
+        {list.map(([l, c]) => (
+          <i key={l} style={{ flexGrow: c, background: langColor(l) }} title={`${l}: ${c}`} />
+        ))}
+      </div>
+      <ul>
+        {list.map(([l, c]) => (
+          <li key={l}>
+            <i style={{ background: langColor(l) }} />
+            {l} <span>{Math.round((c / sum) * 100)}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+// The latest commits across the most recently pushed repositories, in a terminal.
+function GitLog({ log }) {
+  return (
+    <figure className="term pop" aria-label="Latest commits">
+      <div className="term__bar" aria-hidden="true">
+        <i /> <i /> <i />
+        <span>git log --oneline</span>
+      </div>
+      <ol>
+        {log.map((c, i) => (
+          <li key={c.sha + c.repo} style={{ '--n': i }}>
+            <code>{c.sha}</code>
+            <span>{c.msg}</span>
+            <em>{c.repo} · {ago(c.at)}</em>
+          </li>
+        ))}
+      </ol>
+    </figure>
+  )
+}
+
 export default function Code() {
-  const { status, repos } = useRepos(USER)
-  const stars = repos.reduce((n, r) => n + r.stars, 0)
-  const langs = Object.entries(repos.reduce((m, r) => (r.lang ? { ...m, [r.lang]: (m[r.lang] || 0) + 1 } : m), {})).sort((a, b) => b[1] - a[1])
-  const shown = repos.slice(0, 6)
+  const { status, repos, log, cal } = useGithub(USER)
 
   return (
     <section id="code" className="sheet code" aria-label="Code and GitHub">
@@ -97,48 +219,33 @@ export default function Code() {
         </div>
 
         <div className="code__right">
-          {status === 'ready' && shown.length > 0 && (
+          {status === 'loading' && <p className="code__note">Loading GitHub activity…</p>}
+          {status === 'error' && <p className="code__note">Could not load GitHub activity right now. It is all at {PROFILE.github}.</p>}
+          {status === 'ready' && (
             <>
-              <dl className="code__stats pop">
-                <div>
-                  <dt>Public repos</dt>
-                  <dd>{repos.length}</dd>
-                </div>
-                <div>
-                  <dt>Stars</dt>
-                  <dd>{stars}</dd>
-                </div>
-                {langs[0] && (
-                  <div>
-                    <dt>Most used</dt>
-                    <dd>{langs[0][0]}</dd>
-                  </div>
-                )}
-              </dl>
-              <ul className="repos">
-                {shown.map((r) => (
-                  <li key={r.name} className="pop" style={{ "--n": shown.indexOf(r) }}>
-                    <a className="repo" href={r.url} target="_blank" rel="noreferrer">
-                      <b>{r.name}</b>
-                      <p>{r.text || 'No description yet.'}</p>
-                      <span>
-                        {r.lang && <em>{r.lang}</em>}
-                        <em>★ {r.stars}</em>
-                        <em>Updated {ago(r.pushed)}</em>
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              {cal && <Heatmap cal={cal} />}
+              {repos && <Languages repos={repos} />}
+              {log && log.length > 0 && <GitLog log={log} />}
+              {repos && repos.length > 0 && (
+                <ul className="rchips pop" aria-label="Repositories">
+                  {repos.slice(0, 10).map((r) => (
+                    <li key={r.name}>
+                      <a href={r.url} target="_blank" rel="noreferrer">
+                        <i style={{ background: langColor(r.lang) }} />
+                        {r.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </>
           )}
-          {status === 'loading' && <p className="code__note">Loading repositories…</p>}
-          {status === 'error' && <p className="code__note">Could not load repositories right now. They are all at {PROFILE.github}.</p>}
-          {status === 'ready' && shown.length === 0 && <p className="code__note">No public repositories yet.</p>}
           {status === 'none' && (
             <div className="code__empty pop">
-              <b>Repositories appear here.</b>
-              <p>Add your GitHub URL as <code>github</code> in <code>src/data/profile.js</code> and the latest public repositories, stars and top language load in automatically.</p>
+              <b>GitHub activity appears here.</b>
+              <p>
+                Add your GitHub URL as <code>github</code> in <code>src/data/profile.js</code> and your contribution heatmap, languages, latest commits and repositories load in automatically.
+              </p>
             </div>
           )}
         </div>

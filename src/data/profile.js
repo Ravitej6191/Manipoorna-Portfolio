@@ -8,7 +8,7 @@ export const PROFILE = {
   city: 'Bengaluru, India',
   email: 'ndmprao2001@gmail.com',
   linkedin: 'https://www.linkedin.com/in/mani-poorna-801365236/',
-  github: 'https://github.com/Ravitej6191', // sample for now: replace with Mani's own profile
+  github: 'https://github.com/ManiPoorna',
   resume: `${import.meta.env.BASE_URL}Mani_Poorna_Resume.pdf`, // note: the PDF itself lists a phone number
   photo: `${import.meta.env.BASE_URL}profile.jpg`, // drop a portrait at /public/profile.jpg
 }

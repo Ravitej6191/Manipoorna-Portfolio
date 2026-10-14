@@ -105,7 +105,6 @@ export function Skills() {
 
 /* ───────── kind words ───────── */
 export function Testimonials() {
-  const anySample = TESTIMONIALS.some((t) => t.sample)
   return (
     <section id="testimonials" className="sheet kind" aria-label="Testimonials">
       <SheetHead n="07" title="Kind words" note="What the people I work with say." />
@@ -119,12 +118,10 @@ export function Testimonials() {
             <figcaption>
               <b>{t.name}</b>
               <span>{t.role}</span>
-              {t.sample && <em className="sample">Sample</em>}
             </figcaption>
           </figure>
         ))}
       </div>
-      {anySample && <p className="kind__note reveal">Placeholder quotes, shown to preview the layout. Replace them with real ones in src/data/proof.js.</p>}
     </section>
   )
 }

@@ -23,7 +23,7 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 |---|---|---|
 | 01 | Home | Name and the exploded stack drawing |
 | 02 | About | Summary and an at-a-glance block |
-| 03 | Projects | Projects as isometric diagrams, each with its own page (`#/work/pos`, `#/work/audit`, `#/work/insight`) |
+| 03 | Projects | Projects as isometric diagrams, each with its own page (`#/work/talus-pay`, `#/work/schneider-electric`, `#/work/b2b-talent-hub`) |
 | 04 | Code | A git-graph drawing of the workflow, plus live public repositories once a GitHub URL is set |
 | 05 | Experience | Work history and education |
 | 06 | Skills | Technologies grouped by area |
@@ -34,7 +34,7 @@ the Work sheet, hovering a layer lights up its legend entry and the other way ro
 
 - **Photo:** `public/profile.jpg`.
 - **GitHub:** set `github` in `src/data/profile.js`. The Code section then loads public repositories, stars and top language from the GitHub API.
-- **Sample content:** project 03 (`sample: true` in `src/data/projects.js`) and the testimonials (`src/data/proof.js`) are placeholders, labelled on the page. Replace or delete them.
+- **Content still to fill in:** Talus Pay's details (`src/data/projects.js`) and the testimonial quotes (`src/data/proof.js`).
 - **Project pages:** add `links: { live, repo }` and `shots: [{ src, alt, caption }]` to a project, and the buttons and a Screens section appear.
 
 ## What still needs real input
