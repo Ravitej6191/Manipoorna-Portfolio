@@ -9,10 +9,10 @@ export const SHEETS = [
   { id: 'work', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
   { id: 'skills', label: 'Skills' },
-  { id: 'code', label: 'Code' },
-  { id: 'ai', label: 'AI' },
+  { id: 'code', label: 'Code', tab: false },
+  { id: 'ai', label: 'AI', tab: false },
   ...(NOTES.length ? [{ id: 'notes', label: 'Notes' }] : []),
-  { id: 'testimonials', label: 'Kind words' },
+  { id: 'testimonials', label: 'Kind words', tab: false },
   { id: 'contact', label: 'Contact' },
 ].map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0') }))
 
@@ -87,7 +87,7 @@ export function Header({ theme, onTheme, onPalette }) {
         <span>{open ? 'Close' : 'Menu'}</span>
       </button>
       <nav id="sections-nav" className={'hdr__nav' + (open ? ' is-open' : '')} aria-label="Sections">
-        {SHEETS.map((s) => (
+        {SHEETS.filter((s) => s.tab !== false).map((s) => (
           <a
             key={s.id}
             href={`#${s.id}`}
@@ -95,7 +95,6 @@ export function Header({ theme, onTheme, onPalette }) {
             aria-current={active === s.id ? 'true' : undefined}
             onClick={(e) => (e.preventDefault(), setOpen(false), goTo(s.id))}
           >
-            <i>{s.n}</i>
             <span>{s.label}</span>
           </a>
         ))}
