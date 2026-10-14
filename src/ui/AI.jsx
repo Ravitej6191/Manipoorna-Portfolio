@@ -10,7 +10,7 @@ const ICON = {
   learn: 'M7 12h14c2 0 4 2 4 4v24c0-2-2-4-4-4H7z M41 12H27c-2 0-4 2-4 4v24c0-2 2-4 4-4h14z',
 }
 
-// An SVG dropped in src/assets/logos/<slug>.svg is picked up automatically (for tools missing from the open icon set)
+// An SVG dropped in src/assets/logos/<slug>.svg is picked up automatically and wins over the built-in mark
 const FILES = import.meta.glob('../assets/logos/*.svg', { eager: true, query: '?url', import: 'default' })
 
 // The tool's own logo on a light tile (so dark logos still show on the Blueprint look); a letter if there is none.
@@ -19,12 +19,12 @@ function Logo({ slug, name }) {
   const file = FILES[`../assets/logos/${slug}.svg`]
   return (
     <i className="ai__logo" aria-hidden="true">
-      {mark ? (
+      {file ? (
+        <img src={file} alt="" />
+      ) : mark ? (
         <svg viewBox="0 0 24 24">
           <path d={mark.path} fill={mark.hex} />
         </svg>
-      ) : file ? (
-        <img src={file} alt="" />
       ) : (
         <b>{name[0]}</b>
       )}
