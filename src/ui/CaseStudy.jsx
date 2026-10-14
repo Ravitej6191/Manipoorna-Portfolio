@@ -43,7 +43,7 @@ export default function CaseStudy({ project, leaving = false, onClose, onContact
     ['overview', 'Overview'],
     ['problem', 'The problem'],
     ['approach', 'Approach'],
-    ['architecture', 'Architecture'],
+    ['architecture', 'Key parts'],
     ...(project.flow ? [['flow', 'Flow']] : []),
     ...(shots.length ? [['screens', 'Screens']] : []),
     ...(project.figma ? [['prototype', 'Prototype']] : []),
@@ -172,7 +172,7 @@ export default function CaseStudy({ project, leaving = false, onClose, onContact
             </section>
 
             <section className="cs__sec reveal" data-sec="architecture">
-              <h2>Architecture</h2>
+              <h2>Key parts</h2>
               <Legend layers={project.layers} hover={hover} setHover={setHover} />
             </section>
 

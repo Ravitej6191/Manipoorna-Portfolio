@@ -1,10 +1,13 @@
 // Experience, education and skills. Source: Mani_Poorna_Resume.pdf.
+
+// whole years since the current role began (April 2024), so the figure never goes stale
+const YEARS = Math.floor((Date.now() - new Date('2024-04-01').getTime()) / (365.25 * 864e5))
 export const ABOUT = {
   summary:
     'A full-stack developer specialising in Java: Spring Boot for the backend and React.js for the interface. Known for adaptability, attention to detail and inventive problem-solving, and for building scalable, high-performance web applications that line up with the business behind them.',
   facts: [
     ['Location', 'Bengaluru, India'],
-    ['Experience', '2 years, full-stack'],
+    ['Experience', `${YEARS} years, full-stack`],
     ['Company', 'Elfonze Technologies'],
     ['Education', 'B.E., Ideal Institute of Technology'],
   ],

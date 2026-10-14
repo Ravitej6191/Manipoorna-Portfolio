@@ -148,7 +148,7 @@ export function Notes() {
 }
 
 /* ───────── kind words ───────── */
-// A profile icon: the person's photo if  is set on their entry and loads, otherwise a drawn head-and-shoulders.
+// A profile icon: the person's photo if `photo` is set on their entry and loads, otherwise a drawn head-and-shoulders.
 function Avatar({ name, photo, tone }) {
   const [ok, setOk] = useState(Boolean(photo))
   return (

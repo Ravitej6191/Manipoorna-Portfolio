@@ -218,7 +218,7 @@ export default function Code() {
         <div className="code__left">
           <GitGraph />
           <p className="code__text reveal">
-            I work in Agile teams, in a continuous-integration flow: a branch for each change, a review, and checks before anything merges.
+            I work in Agile teams in a continuous-integration environment, where changes are reviewed and checked before they merge.
           </p>
           {PROFILE.github && (
             <a className="btn btn--solid reveal" href={PROFILE.github} target="_blank" rel="noreferrer">
