@@ -744,7 +744,6 @@ kbd { font: 500 10px var(--mono); letter-spacing: 0.08em; padding: 0.15rem 0.4re
 .ai__tools ul { margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .ai__tools li { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.35rem 0.7rem 0.35rem 0.4rem; border: 1px solid var(--ink); background: var(--paper-2); font: 500 12px var(--mono); letter-spacing: 0.04em; transition: transform 0.2s ease, background 0.2s ease; }
 .ai__tools li:hover { transform: translateY(-2px); background: var(--blue-soft); }
-.ai__tools li i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 500 11px var(--mono); font-style: normal; }
 @media (max-width: 959px) { .ai__grid, .ai__tools { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .ai__card, .ai__card:hover, .ai__tools li, .ai__tools li:hover { transition: none; transform: none; } }
 
@@ -793,3 +792,8 @@ kbd { font: 500 10px var(--mono); letter-spacing: 0.08em; padding: 0.15rem 0.4re
 @media (min-width: 3200px) {
   html { font-size: 24px; }
 }
+.ai__tools li { padding: 0.35rem 0.8rem 0.35rem 0.35rem; }
+.ai__logo { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: #fff; border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font-style: normal; }
+.ai__logo svg, .ai__logo img { width: 17px; height: 17px; display: block; }
+.ai__logo b { font: 600 13px var(--mono); color: #13233b; }
+.ai__note { margin-top: 1.4rem; font: 400 11px/1.6 var(--mono); color: var(--ink-3); }

@@ -28,9 +28,36 @@ export const AI = {
       tools: ['Perplexity', 'Gemini', 'Claude'],
     },
   ],
+  // `logo` is a slug from src/data/logos.js, or the name of an SVG dropped in src/assets/logos/
   tools: [
-    { group: 'AI assistants', items: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity'] },
-    { group: 'In the editor', items: ['GitHub Copilot', 'Cursor', 'JetBrains AI Assistant'] },
-    { group: 'Everyday dev tools', items: ['VS Code', 'IntelliJ IDEA', 'Postman', 'Git and GitHub', 'Chrome DevTools', 'React DevTools'] },
+    {
+      group: 'AI assistants',
+      items: [
+        { name: 'ChatGPT', logo: 'chatgpt' },
+        { name: 'Claude', logo: 'claude' },
+        { name: 'Gemini', logo: 'gemini' },
+        { name: 'Perplexity', logo: 'perplexity' },
+      ],
+    },
+    {
+      group: 'In the editor',
+      items: [
+        { name: 'GitHub Copilot', logo: 'githubcopilot' },
+        { name: 'Cursor', logo: 'cursor' },
+        { name: 'JetBrains AI Assistant', logo: 'jetbrains' },
+      ],
+    },
+    {
+      group: 'Everyday dev tools',
+      items: [
+        { name: 'VS Code', logo: 'vscode' },
+        { name: 'IntelliJ IDEA', logo: 'intellijidea' },
+        { name: 'Postman', logo: 'postman' },
+        { name: 'Git', logo: 'git' },
+        { name: 'GitHub', logo: 'github' },
+        { name: 'Chrome DevTools', logo: 'chrome' },
+        { name: 'React DevTools', logo: 'react' },
+      ],
+    },
   ],
 }
