@@ -38,6 +38,6 @@ export const EDUCATION = [
 export const SKILLS = [
   ['Languages', ['Java 8 / 11', 'JavaScript (ES6+)', 'SQL', 'HTML5', 'CSS3']],
   ['Backend', ['Spring Boot', 'Spring MVC', 'JPA / Hibernate', 'RESTful APIs', 'Spring Security (JWT, RBAC)']],
-  ['Frontend', ['React.js', 'Redux', 'JavaScript', 'Tailwind', 'Bootstrap']],
+  ['Frontend', ['React.js', 'Redux', 'Tailwind', 'Bootstrap']],
   ['Data', ['PostgreSQL', 'MySQL']],
 ]

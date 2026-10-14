@@ -104,6 +104,22 @@ export function Skills() {
 }
 
 /* ───────── kind words ───────── */
+// A profile icon: the person's photo if  is set on their entry and loads, otherwise a drawn head-and-shoulders.
+function Avatar({ name, photo, tone }) {
+  const [ok, setOk] = useState(Boolean(photo))
+  return (
+    <span className={'quote__av quote__av--' + tone} aria-hidden="true">
+      {ok ? (
+        <img src={photo} alt="" onError={() => setOk(false)} draggable="false" />
+      ) : (
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="18" r="8" />
+          <path d="M8 42c1-9 8-14 16-14s15 5 16 14" />
+        </svg>
+      )}
+    </span>
+  )
+}
 export function Testimonials() {
   return (
     <section id="testimonials" className="sheet kind" aria-label="Testimonials">
@@ -116,8 +132,11 @@ export function Testimonials() {
             </svg>
             <blockquote>{t.quote}</blockquote>
             <figcaption>
-              <b>{t.name}</b>
-              <span>{t.role}</span>
+              <Avatar name={t.name} photo={t.photo} tone={i % 3} />
+              <div>
+                <b>{t.name}</b>
+                <span>{t.role}</span>
+              </div>
             </figcaption>
           </figure>
         ))}
@@ -272,7 +291,12 @@ export function Contact() {
         <span>
           © {new Date().getFullYear()} {PROFILE.name}
         </span>
-        <span>Built with React and hand-drawn SVG</span>
+        <span>
+          Built with <span role="img" aria-label="love">❤️</span> · Thanks to{' '}
+          <a href="https://ravitejaavvaru.com" target="_blank" rel="noreferrer">
+            ravitejaavvaru.com
+          </a>
+        </span>
       </footer>
     </section>
   )

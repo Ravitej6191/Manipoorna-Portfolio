@@ -6,7 +6,7 @@ import { goTo } from './Chrome.jsx'
 // A portrait in a frame: registration marks at the corners and a duotone treatment.
 // With no photo at /public/profile.jpg the desk drawing is shown instead.
 function Figure() {
-  const [ok, setOk] = useState(true)
+  const [ok, setOk] = useState(__HAS_PHOTO__)
   if (!ok) return <Desk />
   return (
     <figure className="figure">

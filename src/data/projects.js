@@ -7,7 +7,7 @@ export const PROJECTS = [
     id: 'talus-pay',
     accent: ['#1a8f5a', '#7be0b0'],
     dwg: 'PROJECT 01',
-    name: 'TALUS PAY',
+    name: 'TALUS PAY (POS)',
     role: 'Payments product',
     blurb: 'User-friendly, workflow-driven interfaces for making and tracking payments, designed to feel simple, clear and secure.',
     stack: ['Payment flows', 'Security', 'Transaction history'],

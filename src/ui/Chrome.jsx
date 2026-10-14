@@ -71,7 +71,7 @@ export function Header({ theme, onTheme }) {
 
   return (
     <header className="hdr">
-      <a className="hdr__mark" href="#cover" onClick={(e) => (e.preventDefault(), goTo('cover'))} aria-label={`${PROFILE.initials} Portfolio, back to the top`}>
+      <a className="hdr__mark" href="#cover" onClick={(e) => (e.preventDefault(), goTo('cover'))} title="Back to the top">
         <b>{PROFILE.initials}</b>
         <span>Portfolio</span>
       </a>

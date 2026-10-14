@@ -31,6 +31,12 @@ export default function CaseStudy({ project, onClose, onContact }) {
     ['outcomes', 'Outcomes'],
   ]
 
+  // focus goes back to whatever opened the page (its card button) when it closes
+  useEffect(() => {
+    const opener = document.activeElement
+    return () => opener && opener.isConnected && opener.focus && opener.focus({ preventScroll: true })
+  }, [])
+
   useEffect(() => {
     const el = root.current
     el.scrollTo(0, 0)

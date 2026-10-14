@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { existsSync } from 'node:fs'
 
 // Fills %SITE_URL% in index.html (canonical link, share image, structured data) from VITE_SITE_URL.
 // With no site URL set there is nothing valid to put in the canonical and og:url tags, so they are left out.
@@ -17,4 +18,6 @@ const fillSiteUrl = (mode) => ({
 export default defineConfig(({ mode }) => ({
   plugins: [react(), fillSiteUrl(mode)],
   server: { port: 5175 },
+  // true when a portrait has been dropped at public/profile.jpg (restart the dev server after adding it)
+  define: { __HAS_PHOTO__: JSON.stringify(existsSync('public/profile.jpg')) },
 }))

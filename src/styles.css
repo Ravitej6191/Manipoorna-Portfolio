@@ -286,9 +286,9 @@ body { transition: background-color 0.4s ease; }
       linear-gradient(to bottom, var(--ink-3) 1px, transparent 1px) calc(100% - 8px) 0 / 7px 24px repeat-y,
       linear-gradient(to bottom, var(--ink-3) 1px, transparent 1px) calc(100% - 8px) 0 / 15px 120px repeat-y; }
 }
-body::after { content: ''; position: fixed; inset: 0; z-index: 38; pointer-events: none; opacity: 0.05; mix-blend-mode: multiply;
+body::after { content: ''; position: fixed; inset: 0; z-index: 38; pointer-events: none; opacity: 0.05;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
-:root[data-theme='blueprint'] body::after { mix-blend-mode: screen; opacity: 0.04; }
+:root[data-theme="blueprint"] body::after { opacity: 0.05; filter: invert(1); }
 
 /* ───────── cover: construction lines, the exploded stack, the stamp ───────── */
 .cover { overflow: hidden; }
@@ -340,7 +340,8 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 38; pointer-event
 .quote:hover { transform: translateY(-6px); box-shadow: 8px 8px 0 var(--blue-soft); transition-delay: 0s; }
 .quote__mark { width: 44px; height: auto; fill: none; stroke: var(--red); stroke-width: 3; stroke-linecap: round; }
 .quote blockquote { margin-top: 1.2rem; font-size: clamp(1.05rem, 1.35vw, 1.2rem); font-weight: 300; line-height: 1.6; flex: 1; }
-.quote figcaption { margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.8rem; }
+.quote figcaption { margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 0.9rem; }
+.quote figcaption div { display: grid; gap: 0.25rem; min-width: 0; }
 .quote figcaption b { font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
 .quote figcaption span { font: 400 12px var(--mono); color: var(--ink-3); }
 
@@ -602,3 +603,27 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 38; pointer-event
 @media (prefers-reduced-motion: reduce) { .hdr__nav, .totop, .skip { transition: none; } }
 
 @supports not (offset-path: path('M0 0')) { .fl__packet { display: none; } }
+
+/* ───────── kind words: profile icons ───────── */
+.quote__av { flex: none; position: relative; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--tone, var(--blue)) 16%, var(--paper-2)); overflow: hidden; }
+.quote__av::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px dashed var(--ink-3); pointer-events: none; }
+.quote__av { overflow: visible; }
+.quote__av svg { width: 70%; height: 70%; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.quote__av svg circle { fill: color-mix(in srgb, var(--tone, var(--blue)) 40%, transparent); }
+.quote__av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.quote__av--0 { --tone: var(--blue); }
+.quote__av--1 { --tone: var(--red); }
+.quote__av--2 { --tone: #2f9e6e; }
+.quote:hover .quote__av::after { animation: av-spin 8s linear infinite; }
+@keyframes av-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .quote:hover .quote__av::after { animation: none; } }
+.foot a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; transition: color 0.2s ease; }
+.foot a:hover { color: var(--blue); }
+
+/* comfortable touch targets for the header controls */
+.hdr__menu, .hdr__theme { min-height: 40px; }
+.hdr__menu { min-width: 40px; justify-content: center; }
+.hdr__theme { min-width: 40px; justify-content: center; }
+.hdr__mark { min-height: 40px; }
+/* the paper grain is a full-screen layer that is costly to repaint on phones, so it is desktop only */
+@media (max-width: 959px) { body::after { display: none; } }
